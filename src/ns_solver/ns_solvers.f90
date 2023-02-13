@@ -153,11 +153,6 @@ implicit none
 integer :: i,j,k,ii,jj,kk,ug
 real(8) :: solid,x,y,z
 
-if(p%loc%ibm%z>0.4d0/0.6d0)then
-    p%loc%ibm%w=0.0d0
-    goto 110
-endif
-
 if( p%glb%time .le. p%glb%param_t0)then
     p%loc%ibm%w = p%glb%param_a * dexp(p%glb%time) * (p%glb%time+1) / p%glb%U
 else

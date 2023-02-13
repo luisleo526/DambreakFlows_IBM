@@ -90,7 +90,7 @@ enddo
 enddo
 !$omp end parallel do
 
-write(p%fil%damdata+1, *)p%glb%time*p%glb%T, h1*p%glb%L, h2*p%glb%L, h3*p%glb%L, h4*p%glb%L
+write(p%fil%damdata+1, '(5ES15.4)')p%glb%time*p%glb%T, h1*p%glb%L, h2*p%glb%L, h3*p%glb%L, h4*p%glb%L
 
 end subroutine
 
