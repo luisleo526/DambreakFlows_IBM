@@ -39,7 +39,7 @@ write(p%fil%damdata, *)p%glb%time*p%glb%T, damfront*p%glb%L, damh*p%glb%L
 ! h1, h2, h3, h4 = (0.5, 1.5, 2.0, 2.5)
 
 h1=0.0
-i=ceil(0.5/p%glb%L/p%glb%dx)
+i=int(0.5/p%glb%L/p%glb%dx)
 !$omp parallel do collapse(2), reduction(max:h1)
 do k = p%loc%ks, p%loc%ke
 do j = p%loc%js, p%loc%je
@@ -52,7 +52,7 @@ enddo
 !$omp end parallel do
 
 h2=0.0
-i=ceil(1.5/p%glb%L/p%glb%dx)
+i=int(1.5/p%glb%L/p%glb%dx)
 !$omp parallel do collapse(2), reduction(max:h1)
 do k = p%loc%ks, p%loc%ke
 do j = p%loc%js, p%loc%je
@@ -65,7 +65,7 @@ enddo
 !$omp end parallel do
 
 h3=0.0
-i=ceil(2.0/p%glb%L/p%glb%dx)
+i=int(2.0/p%glb%L/p%glb%dx)
 !$omp parallel do collapse(2), reduction(max:h1)
 do k = p%loc%ks, p%loc%ke
 do j = p%loc%js, p%loc%je
@@ -78,7 +78,7 @@ enddo
 !$omp end parallel do
 
 h4=0.0
-i=ceil(2.5/p%glb%L/p%glb%dx)
+i=int(2.5/p%glb%L/p%glb%dx)
 !$omp parallel do collapse(2), reduction(max:h1)
 do k = p%loc%ks, p%loc%ke
 do j = p%loc%js, p%loc%je
