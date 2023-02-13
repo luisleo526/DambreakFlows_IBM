@@ -3,10 +3,10 @@ use all
 implicit none
 integer :: i,j,k
 real(8) :: damfront, damh
-real(8) :: g5a,g0,gc,g8a
+real(8) :: h1, h2, h3, h4
 
 ! level set method, loss of volume/mass in percentage
-write(p%fil%ls_mv,*)p%glb%time,100.0d0*(p%glb%imass-p%glb%mass)/p%glb%imass,100.0d0*(p%glb%ivol-p%glb%vol)/p%glb%ivol
+write(p%fil%ls_mv,*)p%glb%time,100.0d0*(p%glb%imass-p%glb%mass)/p%glb%imass,100.0d0*(p%glb%imassv-p%glb%massv)/p%glb%imassv
 
 !Drybed 
 damfront = 0.0d0; damh=0.0d0
@@ -36,44 +36,61 @@ enddo
 
 write(p%fil%damdata, *)p%glb%time*p%glb%T, damfront*p%glb%L, damh*p%glb%L
 
+! h1, h2, h3, h4 = (0.5, 1.5, 2.0, 2.5)
 
-! ! G5A, (x,y) = (0.18,1)
-! j=p%glb%node_y/2
-! i=int(0.18d0/p%glb%dx-0.5d0)+1
-! do k = p%loc%ks, p%loc%ke-1
-!     if( p%loc%phi%now(i,j,k) * p%loc%phi%now(i,j,k+1) < 0.0d0 )then
-!         g5a = p%glb%z(i,j,k) + p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))  )
-!     endif
-! enddo
+h1=0.0
+i=ceil(0.5/p%glb%L/p%glb%dx)
+!$omp parallel do collapse(2), reduction(max:h1)
+do k = p%loc%ks, p%loc%ke
+do j = p%loc%js, p%loc%je
+    if( p%loc%phi%now(i,j,k)*p%loc%phi%now(i,j,k+1) < 0.0d0 .and. p%loc%phi%now(i,j,k-1)>0.0d0 .and. p%loc%phi%now(i,j,k-2)>0.0d0 )then
+        h1 = max( h1, p%glb%z(i,j,k) + &
+            p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))) )
+    endif
+enddo
+enddo
+!$omp end parallel do
 
-! ! G0, (x,y) = (1,1)
-! j=p%glb%node_y/2
-! i=int(1.0d0/p%glb%dx-0.5d0)+1
-! do k = p%loc%ks, p%loc%ke-1
-!     if( p%loc%phi%now(i,j,k) * p%loc%phi%now(i,j,k+1) < 0.0d0 )then
-!         g0 = p%glb%z(i,j,k) + p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))  )
-!     endif
-! enddo
+h2=0.0
+i=ceil(1.5/p%glb%L/p%glb%dx)
+!$omp parallel do collapse(2), reduction(max:h1)
+do k = p%loc%ks, p%loc%ke
+do j = p%loc%js, p%loc%je
+    if( p%loc%phi%now(i,j,k)*p%loc%phi%now(i,j,k+1) < 0.0d0 .and. p%loc%phi%now(i,j,k-1)>0.0d0 .and. p%loc%phi%now(i,j,k-2)>0.0d0 )then
+        h2 = max( h2, p%glb%z(i,j,k) + &
+            p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))) )
+    endif
+enddo
+enddo
+!$omp end parallel do
 
-! ! G0, (x,y) = (0.505,1.65)
-! j=int(1.65d0/p%glb%dx-0.5d0)+1
-! i=int(0.505d0/p%glb%dx-0.5d0)+1
-! do k = p%loc%ks, p%loc%ke-1
-!     if( p%loc%phi%now(i,j,k) * p%loc%phi%now(i,j,k+1) < 0.0d0 )then
-!         gc = p%glb%z(i,j,k) + p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))  )
-!     endif
-! enddo
+h3=0.0
+i=ceil(2.0/p%glb%L/p%glb%dx)
+!$omp parallel do collapse(2), reduction(max:h1)
+do k = p%loc%ks, p%loc%ke
+do j = p%loc%js, p%loc%je
+    if( p%loc%phi%now(i,j,k)*p%loc%phi%now(i,j,k+1) < 0.0d0 .and. p%loc%phi%now(i,j,k-1)>0.0d0 .and. p%loc%phi%now(i,j,k-2)>0.0d0 )then
+        h3 = max( h3, p%glb%z(i,j,k) + &
+            p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))) )
+    endif
+enddo
+enddo
+!$omp end parallel do
 
-! ! g8a, (x,y) = (1.722,1)
-! j=p%glb%node_y/2
-! i=int(1.722d0/p%glb%dx-0.5d0)+1
-! do k = p%loc%ks, p%loc%ke-1
-!     if( p%loc%phi%now(i,j,k) * p%loc%phi%now(i,j,k+1) < 0.0d0 )then
-!         g8a = p%glb%z(i,j,k) + p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))  )
-!     endif
-! enddo
+h4=0.0
+i=ceil(2.5/p%glb%L/p%glb%dx)
+!$omp parallel do collapse(2), reduction(max:h1)
+do k = p%loc%ks, p%loc%ke
+do j = p%loc%js, p%loc%je
+    if( p%loc%phi%now(i,j,k)*p%loc%phi%now(i,j,k+1) < 0.0d0 .and. p%loc%phi%now(i,j,k-1)>0.0d0 .and. p%loc%phi%now(i,j,k-2)>0.0d0 )then
+        h4 = max( h4, p%glb%z(i,j,k) + &
+            p%glb%dz*abs(p%loc%phi%now(i,j,k))/( abs(p%loc%phi%now(i,j,k))+abs(p%loc%phi%now(i,j,k+1))) )
+    endif
+enddo
+enddo
+!$omp end parallel do
 
-! write(p%fil%damdata, *)p%glb%time, g5a, g0, gc, g8a
+write(p%fil%damdata+1, *)p%glb%time*p%glb%T, h1*p%glb%L, h2*p%glb%L, h3*p%glb%L, h4*p%glb%L
 
 end subroutine
 

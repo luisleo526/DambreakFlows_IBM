@@ -5,7 +5,7 @@ ooo	Number of threads
 ooo	Plot split (modify if segmentation fault occur when plotting)
 2
 ooo	Name of the problem 
-50_RisingGate4
+CaseA_30
 ooo	Cells per unit length 
 50
 ooo	Number of ghost cell

@@ -61,6 +61,10 @@ CHARACTER(100) :: NAME_OF_FILE
                 p%loc%ibm%solid%now(i,j,k) = p%loc%ibm%solid%now(i,j,k) + 1.0d0/real(ug,8)**3.0d0
             endif
 
+            if( x<=5.0d0/3.0d0 .and. z<=1.0d0 )then
+                p%loc%vof%now(i,j,k) = p%loc%vof%now(i,j,k) +  1.0d0/real(ug,8)**3.0d0
+            end if
+
         end do
         end do
         end do

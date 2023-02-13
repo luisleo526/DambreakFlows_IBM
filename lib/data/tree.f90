@@ -128,13 +128,15 @@ real(8) :: mag
     write(*,*)"finish read data from file"
     
     p%fil%ls_mv = 15
-    open(unit=p%fil%ls_mv,file="./out/"//trim(p%glb%name)//"_MVloss.plt")
-    write(p%fil%ls_mv,*)'variables = "T" "Loss of mass" "Loss of Volume" '
+    open(unit=p%fil%ls_mv,file="./out/"//trim(p%glb%name)//"_MassLoss.plt")
+    write(p%fil%ls_mv,*)'variables = "T" "Loss of mass (LS)" "Loss of mass (VOF)" '
 
     p%fil%damdata = 16
     open(unit=p%fil%damdata,file="./out/"//trim(p%glb%name)//"_DamData.plt")
     write(p%fil%damdata,*)'variables = "T" "Damfront" "Wall" '
-    !write(p%fil%damdata,*)'variables = "T" "G5A" "G0" "GC" "G8A" '
+
+    open(unit=p%fil%damdata+1,file="./out/"//trim(p%glb%name)//"_DamData2.plt")
+    write(p%fil%damdata,*)'variables = "T" "H1" "H2" "H3" "H4" '
     
     call omp_set_dynamic(.false.)
     if( p%glb%threads < 0 )then
