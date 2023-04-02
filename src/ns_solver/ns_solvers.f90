@@ -173,7 +173,7 @@ do i = p%loc%is, p%loc%ie
         
         ! dambreak -- rising gate
         !========================================
-        if( x>5.0d0/3.0d0 .and. x<5.0d0/3.0d0+2.0d0*p%glb%dx .and. z<4.0d0/3.0d0+p%loc%ibm%z .and. z>p%loc%ibm%z )then
+        if( x>5.0d0/3.0d0 .and. x<5.0d0/3.0d0+2.0d0*p%glb%dx .and. z>p%loc%ibm%z )then
             p%loc%ibm%solid%now(i,j,k) = p%loc%ibm%solid%now(i,j,k) + 1.0d0/real(ug,8)**3.0d0
         endif
 

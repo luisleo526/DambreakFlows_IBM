@@ -46,6 +46,7 @@ integer :: id, level
     write(*,'(A20,I4,A3,I4)')"Y index:",p%loc%js,"~",p%loc%je
     write(*,'(A20,I4,A3,I4)')"Z index:",p%loc%ks,"~",p%loc%ke
     write(*,*)""
+    write(*,*)"Vg:", p%glb%param_v0
 
 end subroutine
 
