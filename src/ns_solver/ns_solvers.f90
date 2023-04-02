@@ -153,12 +153,6 @@ implicit none
 integer :: i,j,k,ii,jj,kk,ug
 real(8) :: solid,x,y,z
 
-if( p%glb%time .le. p%glb%param_t0)then
-    p%loc%ibm%w = p%glb%param_a * dexp(p%glb%time) * (p%glb%time+1) / p%glb%U
-else
-    p%loc%ibm%w = (p%glb%param_a * dexp(p%glb%time) * (p%glb%time+1) + p%glb%param_v0) / p%glb%U
-endif
-
 p%loc%ibm%z = p%loc%ibm%z + p%loc%ibm%w*p%glb%dt
 
 ug=30

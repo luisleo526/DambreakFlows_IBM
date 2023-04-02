@@ -35,7 +35,7 @@ real(8) :: vel_div, vel_sdiv, ns_linf, ns_l2f, ppe_linf
 real(8) :: btn_sf, btn_g
 real(8) :: ls_adv, ls_red, ppe, ns, syn
 real(8),dimension(:,:,:),allocatable :: x, y, z
-real(8) :: param_t0, param_a, param_v0
+real(8) :: param_v0
 end type global
 
 type ibm_data

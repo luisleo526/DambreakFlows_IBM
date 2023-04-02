@@ -50,10 +50,10 @@ ooo     Velocity boundary condition in Y direction ( no-slip / slip / non-reflec
 1               1
 ooo     Velocity boundary condition in Z direction ( no-slip / slip / non-reflective )
 1               1
-ooo     Parameters (t0, a, v0)
-0.6336 0.1627 0.7507
+ooo     Parameters (v0)
+0.408
 
-0.6336 	  0.1627    0.7507
-0.4076    0.3558    0.9617
-0.2018    0.5036    1.1942
-0.1600    0.6817    1.3818
+0.408
+0.696
+0.952
+1.194

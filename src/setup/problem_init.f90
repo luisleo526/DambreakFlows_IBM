@@ -109,6 +109,7 @@ CHARACTER(100) :: NAME_OF_FILE
     !$omp end parallel do
 
     p%loc%ibm%z = 0.0d0
+    p%loc%ibm%w = p%glb%param_v0 / p%glb%U
     
     call bc(p%loc%phi%now)
     call bc(p%loc%vof%now)

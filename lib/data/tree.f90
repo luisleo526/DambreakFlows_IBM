@@ -109,7 +109,7 @@ character(*) :: path
  read(526,*)
  read(526,*)p%glb%wbc(1), p%glb%wbc(2) 
  read(526,*)
- read(526,*)p%glb%param_t0, p%glb%param_a, p%glb%param_v0
+ read(526,*)p%glb%param_v0
  
  close(unit=526)
  
@@ -136,7 +136,7 @@ real(8) :: mag
     write(p%fil%damdata,*)'variables = "T" "Damfront" "Wall" '
 
     open(unit=p%fil%damdata+1,file="./out/"//trim(p%glb%name)//"_DamData2.plt")
-    write(p%fil%damdata,*)'variables = "T" "H1" "H2" "H3" "H4" '
+    write(p%fil%damdata+1,*)'variables = "T" "H1" "H2" "H3" "H4" '
     
     call omp_set_dynamic(.false.)
     if( p%glb%threads < 0 )then
