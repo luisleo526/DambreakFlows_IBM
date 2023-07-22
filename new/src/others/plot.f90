@@ -49,7 +49,7 @@ do id = 0, p%glb%threads-1
         E_IO = VTK_DAT_XML(var_location = 'node', var_block_action = 'open')
         
         E_IO = VTK_VAR_XML(NC_NN = nn, varname = 'Phi', var = p%of(id)%loc%phi%now(nx1:nx2,ny1:ny2,nz1:nz2) )
-        E_IO = VTK_VAR_XML(NC_NN = nn, varname = 'Solid', var = p%of(id)%loc%ibm%solid%now(nx1:nx2,ny1:ny2,nz1:nz2) )
+        E_IO = VTK_VAR_XML(NC_NN = nn, varname = 'Solid', var = p%of(id)%loc%solid%now(nx1:nx2,ny1:ny2,nz1:nz2) )
         
         ! E_IO = VTK_VAR_XML(NC_NN = nn, varname = 'Phi_1', var = p%of(id)%loc%marker(1)%lsf%now(nx1:nx2,ny1:ny2,nz1:nz2) )
         ! E_IO = VTK_VAR_XML(NC_NN = nn, varname = 'Phi_2', var = p%of(id)%loc%marker(2)%lsf%now(nx1:nx2,ny1:ny2,nz1:nz2) )

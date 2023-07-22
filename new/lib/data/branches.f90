@@ -5,6 +5,11 @@ use time_solver
 use mutligrid_root
 implicit none
 
+type ibm_data
+real(8) :: x, y, z
+real(8) :: u, v, w
+end type ibm_data
+
 type global
 character(30) :: name
 integer :: level
@@ -47,7 +52,7 @@ real(8) :: ls_adv, ls_red, ppe, ns, syn
 real(8),dimension(:,:,:),allocatable :: x, y, z
 integer,allocatable :: id(:,:,:)
 logical :: xper, yper, zper, inverse, merged
-real(8) :: param_v0
+type(ibm_data) :: ibm
 end type global
 
 type interface_function
@@ -56,19 +61,12 @@ real(8) :: volv, massv, ivolv, imassv
 type(time_recorded) :: lsf, vof
 end type interface_function
 
-type ibm_data
-real(8) :: x, y, z
-real(8) :: u, v, w
-type(time_recorded) :: solid
-end type ibm_data
-
 type local
 integer :: id, idx, idy, idz
 integer :: is, ie, js, je, ks, ke
-type(ibm_data) :: ibm
 type(dum_matrices)  :: coe
 type(time_recorded) :: heavy, delta, grad, sign
-type(time_recorded) :: phi, p, rho, mu, vof
+type(time_recorded) :: phi, p, rho, mu, vof, solid
 type(time_recorded_derivatives) :: normals
 type(time_recorded_vec) :: vel, nvel, velsrc
 type(interface_function), dimension(:) :: marker(2)
@@ -203,7 +201,7 @@ call p%loc%vel_ten%alloc(3,is,ie,js,je,ks,ke)
 ! call p%loc%vort_baro%alloc(is,ie,js,je,ks,ke)
 ! call p%loc%vort_visc%alloc(is,ie,js,je,ks,ke)
 
-call p%loc%ibm%solid%alloc(is,ie,js,je,ks,ke)
+call p%loc%solid%alloc(is,ie,js,je,ks,ke)
 
 if( p%glb%level>0 )then
 
@@ -280,7 +278,7 @@ class(local) :: pp
     call pp%marker(1)%vof%init
     call pp%marker(2)%vof%init
 
-    call pp%ibm%solid%init
+    call pp%solid%init
 
 end subroutine
 

@@ -3,7 +3,7 @@ use ptr_roots
 implicit none
 
 type ptr_family
-type(pointer_parent) :: phi, p, vof
+type(pointer_parent) :: phi, p, vof, solid
 type(pointer_vector_parent) :: vel, nvel, nvel_old, velsrc_old, velsrc
 type(pointer_vector_parent) :: normals!, vort
 type(pointer_vector_parent) :: tdatax, tdatay, tdataz
@@ -27,6 +27,7 @@ integer :: idx,idy,idz,id,level
     call p%phi%init(src)
     call p%vof%init(src)
     call p%p%init(src)
+    call p%solid%init(src)
     
     call p%vel%init(src,3)
     call p%velsrc_old%init(src,3)
@@ -60,6 +61,7 @@ integer :: idx,idy,idz,id,level
         p%phi%of(idx,idy,idz)%dat => src%of(id)%loc%phi%now
         p%vof%of(idx,idy,idz)%dat => src%of(id)%loc%vof%now
         p%p%of(idx,idy,idz)%dat => src%of(id)%loc%p%now
+        p%solid%of(idx,idy,idz)%dat => src%of(id)%loc%solid%now
 
         p%marker(1)%nodes(1)%of(idx,idy,idz)%dat => src%of(id)%loc%marker(1)%lsf%now
         p%marker(1)%nodes(2)%of(idx,idy,idz)%dat => src%of(id)%loc%marker(1)%vof%now

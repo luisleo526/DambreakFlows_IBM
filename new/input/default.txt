@@ -5,11 +5,11 @@ CaseA_30
 ooo Dimension of threads grid in X, Y, Z direction
 5 1 2
 ooo Nested OpenMP threads
-4
+1
 ooo Domain splits for plotting (Increase if stack-overflow)
 2
 ooo Multigrid level
-4
+5
 ooo Cells per unit length 
 32
 ooo Number of ghost cell

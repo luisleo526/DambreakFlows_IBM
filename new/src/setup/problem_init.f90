@@ -41,6 +41,7 @@ CHARACTER(100) :: NAME_OF_FILE
             p%of(id)%loc%vof%now(i,j,k) = 0.0d0
             p%of(id)%loc%marker(1)%vof%now(i,j,k) = 0.0d0
             p%of(id)%loc%marker(2)%vof%now(i,j,k) = 0.0d0
+            p%of(id)%loc%solid%now(i,j,k) = 0.0d0
 
             do ii = 1, ug
             do jj = 1, ug
@@ -53,12 +54,8 @@ CHARACTER(100) :: NAME_OF_FILE
                 ! dambreak -- rising gate
                 ! -----------------------------------------------
                 if( x>5.0d0/3.0d0 .and. x<5.0d0/3.0d0+2.0d0*p%glb%dx .and. z>0.0 )then
-                    p%of(id)%loc%ibm%solid%now(i,j,k) = p%of(id)%loc%ibm%solid%now(i,j,k) + 1.0d0/real(ug,8)**3.0d0
+                    p%of(id)%loc%solid%now(i,j,k) = p%of(id)%loc%solid%now(i,j,k) + 1.0d0/real(ug,8)**3.0d0
                 endif
-
-                if( x<=5.0d0/3.0d0 .and. z<=1.0d0 )then
-                    p%of(id)%loc%vof%now(i,j,k) = p%of(id)%loc%vof%now(i,j,k) +  1.0d0/real(ug,8)**3.0d0
-                end if
                 
             end do
             end do
@@ -87,6 +84,7 @@ CHARACTER(100) :: NAME_OF_FILE
         
         call p%of(id)%bc(0,p%of(id)%loc%phi%now)
         call p%of(id)%bc(0,p%of(id)%loc%vof%now)
+        call p%of(id)%bc(0,p%of(id)%loc%solid%now)
 
         call p%of(id)%bc(0,p%of(id)%loc%vel%x%now)
         call p%of(id)%bc(0,p%of(id)%loc%vel%y%now)
@@ -104,10 +102,11 @@ CHARACTER(100) :: NAME_OF_FILE
     call pt%vel%sync
     call pt%phi%sync
     call pt%vof%sync
+    call pt%solid%sync
     call pt%marker(1)%sync
     call pt%marker(2)%sync
 
-    !call level_set_rk3_redis(0)
+    call level_set_rk3_redis(0)
 
     call node_vel
     call ns_init
@@ -125,7 +124,9 @@ CHARACTER(100) :: NAME_OF_FILE
     call plot
     write(*,*) "plot finished"
 
-    stop
+    p%glb%ibm%x = 0.0
+    p%glb%ibm%y = 0.0
+    p%glb%ibm%z = 0.0
 
     p%glb%ls_adv = 0.0d0
     p%glb%ls_red = 0.0d0

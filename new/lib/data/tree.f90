@@ -63,29 +63,8 @@ integer :: id, level
     write(*,'(A20,L5)')"X Periodic:",p%glb%xper
     write(*,'(A20,L5)')"Y Periodic:",p%glb%yper
     write(*,'(A20,L5)')"Z Periodic:",p%glb%zper
-    write(*,*)"Vg:", p%glb%param_v0
+    write(*,*)"Vg:", p%glb%ibm%w
 
-
-    ! write(*,*)" --- SubDomain Information  --- "
-    ! do id = 0, p%glb%threads-1
-    !    write(*,'("ID ",I2,": (",I2,",",I2,",",I2,")")')ID,p%of(id)%loc%idx,p%of(id)%loc%idy,p%of(id)%loc%idz
-    !    write(*,'(A20,I4,A3,I4)')"X index:",p%of(id)%loc%is,"~",p%of(id)%loc%ie
-    !    write(*,'(A20,I4,A3,I4)')"Y index:",p%of(id)%loc%js,"~",p%of(id)%loc%je
-    !    write(*,'(A20,I4,A3,I4)')"Z index:",p%of(id)%loc%ks,"~",p%of(id)%loc%ke
-    !    write(*,*)""
-    ! end do
-
-    ! write(*,'(A)')"Multigrid information"
-    ! do id  = 0, p%glb%threads-1
-    !     write(*,'("ID ",I2," :",I3,"x",I3,"x",I3)')id,p%of(id)%loc%ie-p%of(id)%loc%is+1,p%of(id)%loc%je-p%of(id)%loc%js+1,p%of(id)%loc%ke-p%of(id)%loc%ks+1
-    !     write(*,*)"-----------------------"
-    !     do level = 1, p%glb%level
-    !         write(*,'("Level: ",I2," ",I5,"x",I5,"x",I5)')level,p%of(id)%loc%mg(level)%nx,p%of(id)%loc%mg(level)%ny,p%of(id)%loc%mg(level)%nz
-    !         write(*,'("dx=",ES11.4,",dy=",ES11.4,",dz=",ES11.4)')p%of(id)%loc%mg(level)%dx,p%of(id)%loc%mg(level)%dy,p%of(id)%loc%mg(level)%dz
-    !     end do
-    !     write(*,*)"======================="
-    ! end do
-    
 end subroutine
 
 subroutine manager_read(p,path)
@@ -157,7 +136,8 @@ integer :: x,y,z,inverse
  read(526,*)
  read(526,*)x,y,z
  read(526,*)
- read(526,*)p%glb%param_v0
+ read(526,*)p%glb%ibm%w
+
  close(unit=526)
 
  if( x==1 )then

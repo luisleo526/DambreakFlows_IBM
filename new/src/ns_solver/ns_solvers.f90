@@ -8,6 +8,7 @@ call system_clock(cpustart)
 call ns_init
 call ns_ab_solver
 call ns_check_convergence_div
+call ibm_bc
 call node_vel
 
 call system_clock(cpuend)
@@ -160,4 +161,79 @@ integer :: id,i,j,k
 
 end subroutine
 
+subroutine ibm_bc
+use all
+implicit none
+integer :: id,i,j,k,ug,ii,jj,kk
+real(8) :: x,y,z,solid
+
+p%glb%ibm%z = p%glb%ibm%z + p%glb%ibm%w*p%glb%dt
+
+ug=30
+
+!$omp parallel do private(i,j,k,ii,jj,kk,x,y,z)
+do id = 0, p%glb%threads-1
+
+    !$omp parallel do num_threads(p%glb%nthreads) collapse(3) private(i,j,k,ii,jj,kk,x,y,z)
+    do k = p%of(id)%loc%ks, p%of(id)%loc%ke
+    do j = p%of(id)%loc%js, p%of(id)%loc%je
+    do i = p%of(id)%loc%is, p%of(id)%loc%ie
+
+        p%of(id)%loc%solid%now(i,j,k) = 0.0d0
+
+        do ii = 1, ug
+        do jj = 1, ug
+        do kk = 1, ug
+            
+            x = 0.5d0*( p%glb%x(i,j,k)+p%glb%x(i-1,j,k) ) + real(ii,8)*p%glb%dx/real(ug,8)
+            y = 0.5d0*( p%glb%y(i,j,k)+p%glb%y(i,j-1,k) ) + real(jj,8)*p%glb%dy/real(ug,8)
+            z = 0.5d0*( p%glb%z(i,j,k)+p%glb%z(i,j,k-1) ) + real(kk,8)*p%glb%dz/real(ug,8)
+
+            if( x>5.0d0/3.0d0 .and. x<5.0d0/3.0d0+2.0d0*p%glb%dx .and. z>p%glb%ibm%z )then
+                p%of(id)%loc%solid%now(i,j,k) = p%of(id)%loc%solid%now(i,j,k) + 1.0d0/real(ug,8)**3.0d0
+            endif
+            
+        end do
+        end do
+        end do
+
+    enddo
+    enddo
+    enddo
+    !$omp end parallel do
+
+    call p%of(id)%bc(0,p%of(id)%loc%solid%now)
+
+enddo
+!$omp end parallel do
+
+call pt%solid%sync
+
+!$omp parallel do private(i,j,k,solid)
+do id = 0, p%glb%threads-1
+
+    !$omp parallel do num_threads(p%glb%nthreads) collapse(3) private(i,j,k,solid)
+    do k = p%of(id)%loc%ks, p%of(id)%loc%ke
+    do j = p%of(id)%loc%js, p%of(id)%loc%je
+    do i = p%of(id)%loc%is, p%of(id)%loc%ie
+
+        solid = 0.5d0*( p%of(id)%loc%solid%now(i,j,k)+p%of(id)%loc%solid%now(i+1,j,k) )
+        p%of(id)%loc%vel%x%now(i,j,k) = (1.0-solid)*p%of(id)%loc%vel%x%now(i,j,k)
+
+        solid = 0.5d0*( p%of(id)%loc%solid%now(i,j,k)+p%of(id)%loc%solid%now(i,j+1,k) )
+        p%of(id)%loc%vel%y%now(i,j,k) = (1.0-solid)*p%of(id)%loc%vel%y%now(i,j,k)
+
+        solid = 0.5d0*( p%of(id)%loc%solid%now(i,j,k)+p%of(id)%loc%solid%now(i,j,k+1) )
+        p%of(id)%loc%vel%z%now(i,j,k) = (1.0-solid)*p%of(id)%loc%vel%z%now(i,j,k) + z*p%glb%ibm%w
+
+    enddo
+    enddo
+    enddo
+    !$omp end parallel do
+
+
+enddo
+!$omp end parallel do
+
+end subroutine
 
