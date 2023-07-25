@@ -4,7 +4,9 @@ use branches
 implicit none
 
 type filemanager
-integer :: mass, vol, energy, momentum, position
+integer :: mass, vol, energy, momentum, position, dambreak, dambreak2
+real(8), allocatable, dimension(:) :: xloc
+integer :: num_of_sensors
 end type filemanager
 
 type multigrid
@@ -198,6 +200,23 @@ real(8) :: kh,ap
     p%fil%position = 19
     open(unit=p%fil%position,file="./out/"//trim(p%glb%name)//"_Position.plt")
     write(p%fil%position,*)'variables = "T" "x" "y" "z" '
+
+    p%fil%dambreak = 20
+    open(unit=p%fil%dambreak,file="./out/"//trim(p%glb%name)//"_dambreak.plt")
+    write(p%fil%dambreak,*)'variables = "T" "Damfront" "Wall" '
+
+    p%fil%dambreak2 = 21
+    open(unit=p%fil%dambreak2,file="./out/"//trim(p%glb%name)//"_dambreak2.plt")
+    write(p%fil%dambreak2,*)'variables = "T" "H1" "H2" "H3" "H4" '
+
+
+    p%fil%num_of_sensors = 4
+    allocate( p%fil%xloc(1:4) )
+    p%fil%xloc(1) = 0.5d0 
+    p%fil%xloc(2) = 1.5d0
+    p%fil%xloc(3) = 2.0d0
+    p%fil%xloc(4) = 2.5d0
+
 
     p%glb%threads = p%glb%grid_x * p%glb%grid_y * p%glb%grid_z
     

@@ -1,8 +1,8 @@
 subroutine output()
 use all
 implicit none
-integer :: i,j,k,id
-real(8) :: damfront, damh, r
+integer :: i,j,k,id,loc_id
+real(8) :: damfront, damh, r, xloc(1:p%fil%num_of_sensors)
 
 if( p%glb%iter == 1)then
     p%glb%ivol = p%glb%vol
@@ -49,48 +49,82 @@ write(p%fil%energy, '(7ES15.4)')p%glb%time, p%glb%ek, p%glb%ep, p%glb%es, p%glb%
 write(p%fil%momentum, '(7ES15.4)')p%glb%time, p%glb%px, p%glb%py, p%glb%pz
 write(p%fil%position, '(7ES15.4)')p%glb%time, p%glb%xc, p%glb%yc, p%glb%zc
 
-! !Drybed 
-! damfront = 0.0d0; damh=0.0d0
-! !$omp parallel do private(i,j,k), reduction(max:damfront, damh), private(r)
-! do id = 0, p%glb%threads-1
+!Drybed 
+damfront = 0.0d0; damh=0.0d0
+!$omp parallel do private(i,j,k), reduction(max:damfront, damh), private(r)
+do id = 0, p%glb%threads-1
     
-!     do k = p%of(id)%loc%ks, p%of(id)%loc%ke
-!     do j = p%of(id)%loc%js, p%of(id)%loc%je
-!     do i = p%of(id)%loc%is, p%of(id)%loc%ie
+    do k = p%of(id)%loc%ks, p%of(id)%loc%ke
+    do j = p%of(id)%loc%js, p%of(id)%loc%je
+    do i = p%of(id)%loc%is, p%of(id)%loc%ie
 
-!         if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i+1,j,k) < 0.0d0 )then
-!             if( p%of(id)%loc%phi%now(i-1,j,k) > 0.0d0 .and. p%of(id)%loc%phi%now(i-2,j,k) >0.0d0 )then
-!                 r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i+1,j,k)))
-!                 damfront = max(damfront, p%glb%x(i,j,k) + p%glb%dx) * r
-!             endif
-!         endif
+        if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i+1,j,k) < 0.0d0 )then
+            if( p%of(id)%loc%phi%now(i-1,j,k) > 0.0d0 .and. p%of(id)%loc%phi%now(i-2,j,k) >0.0d0 )then
+                r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i+1,j,k)))
+                damfront = max(damfront, p%glb%x(i,j,k) + p%glb%dx) * r
+            endif
+        endif
 
-!     enddo
-!     enddo
-!     enddo
+    enddo
+    enddo
+    enddo
 
-!     if(p%of(id)%loc%idx == 0)then
+    if(p%of(id)%loc%idx == 0)then
         
-!         i = p%of(id)%loc%is
-!         do k = p%of(id)%loc%ks, p%of(id)%loc%ke
-!         do j = p%of(id)%loc%js, p%of(id)%loc%je
-!             if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i,j,k+1) < 0.0d0 )then
-!                 if( p%of(id)%loc%phi%now(i,j,k-1) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k-2) >0.0d0 )then
-!                     r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i,j,k+1)))
-!                     damh = max( damh, p%glb%z(i,j,k) + p%glb%dz * r)
-!                 endif
-!             endif
-!         enddo
-!         enddo
+        i = p%of(id)%loc%is
+        do k = p%of(id)%loc%ks, p%of(id)%loc%ke
+        do j = p%of(id)%loc%js, p%of(id)%loc%je
+            if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i,j,k+1) < 0.0d0 )then
+                if( p%of(id)%loc%phi%now(i,j,k-1) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k-2) >0.0d0 )then
+                    r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i,j,k+1)))
+                    damh = max( damh, p%glb%z(i,j,k) + p%glb%dz * r)
+                endif
+            endif
+        enddo
+        enddo
 
-!     endif
+    endif
 
-! enddo
-! !$omp end parallel do
+enddo
+!$omp end parallel do
 
-! write(p%fil%damdata, *)p%glb%time, damfront, damh
+write(p%fil%dambreak, '(7ES15.4)')p%glb%time*p%glb%T, damfront*p%glb%L, damh*p%glb%L
 
-end subroutine
+do loc_id = 1, p%fil%num_of_sensors
+    
+    i = int(p%fil%xloc(loc_id) / p%glb%L / p%glb%dx)
+
+    damh = 0.0
+    !$omp parallel do private(j,k,r) reduction(max:damh)
+    do id = 0, p%glb%threads-1
+        if( i >= p%of(id)%loc%is .and. i<= p%of(id)%loc%ie )
+
+            do k = p%of(id)%loc%ks, p%of(id)%loc%ke
+            do j = p%of(id)%loc%js, p%of(id)%loc%je
+
+                if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i,j,k+1) < 0.0d0 )then
+                    if( p%of(id)%loc%phi%now(i,j,k-1) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k-2) >0.0d0 )then
+                        r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i,j,k+1)))
+                        damh = max( damh, p%glb%z(i,j,k) + p%glb%dz * r)
+                    endif
+                endif
+
+            enddo
+            enddo
+
+        endif
+    enddo
+    !$omp end parallel do
+
+    xloc(loc_id) = damh*p%glb%L
+
+enddo
+
+write(p%fil%dambreak, '(7ES15.4)')p%glb%time*p%glb%T, xloc(:)
+
+enddo 
+
+end subroutine 
 
 subroutine print_NS_info()
 use all 
