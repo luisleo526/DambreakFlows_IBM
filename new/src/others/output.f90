@@ -122,8 +122,6 @@ enddo
 
 write(p%fil%dambreak, '(7ES15.4)')p%glb%time*p%glb%T, xloc(:)
 
-enddo 
-
 end subroutine 
 
 subroutine print_NS_info()
