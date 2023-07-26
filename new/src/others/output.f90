@@ -97,7 +97,7 @@ do loc_id = 1, p%fil%num_of_sensors
     damh = 0.0
     !$omp parallel do private(j,k,r) reduction(max:damh)
     do id = 0, p%glb%threads-1
-        if( i >= p%of(id)%loc%is .and. i<= p%of(id)%loc%ie )
+        if( i >= p%of(id)%loc%is .and. i<= p%of(id)%loc%ie )then
 
             do k = p%of(id)%loc%ks, p%of(id)%loc%ke
             do j = p%of(id)%loc%js, p%of(id)%loc%je
