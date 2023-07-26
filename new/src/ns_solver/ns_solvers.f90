@@ -224,7 +224,7 @@ do id = 0, p%glb%threads-1
         p%of(id)%loc%vel%y%now(i,j,k) = (1.0-solid)*p%of(id)%loc%vel%y%now(i,j,k)
 
         solid = 0.5d0*( p%of(id)%loc%solid%now(i,j,k)+p%of(id)%loc%solid%now(i,j,k+1) )
-        p%of(id)%loc%vel%z%now(i,j,k) = (1.0-solid)*p%of(id)%loc%vel%z%now(i,j,k) + z*p%glb%ibm%w
+        p%of(id)%loc%vel%z%now(i,j,k) = (1.0-solid)*p%of(id)%loc%vel%z%now(i,j,k) + solid*p%glb%ibm%w
 
     enddo
     enddo
