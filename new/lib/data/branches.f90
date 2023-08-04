@@ -6,6 +6,7 @@ use mutligrid_root
 implicit none
 
 type ibm_data
+integer :: ug
 real(8) :: x, y, z
 real(8) :: u, v, w
 end type ibm_data

@@ -90,7 +90,7 @@ integer :: x,y,z,inverse
  read(526,*)
  read(526,*)p%glb%level
  read(526,*)
- read(526,*)p%glb%ug
+ read(526,*)p%glb%ug, p%glb%ibm%ug
  read(526,*)
  read(526,*)p%glb%ghc
  read(526,*)

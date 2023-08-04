@@ -2,8 +2,8 @@ subroutine problem_init()
 use all
 !$ use omp_lib
 implicit none
-integer :: id, i, j, k, ug, ii,jj,kk, mid
-real(8) :: x, y, z, dx, dy, theta, l
+integer :: id, i, j, k, ii, jj, kk, mid
+real(8) :: x, y, z
 CHARACTER(100) :: NAME_OF_FILE
     
     NAME_OF_FILE="default.txt"
@@ -24,12 +24,6 @@ CHARACTER(100) :: NAME_OF_FILE
         
     call p%show
 
-    theta = 0.0d0
-    l = 0.0
-    dx = l * dcos(theta) * 0.5
-    dy = l * dsin(theta) * 0.5
-
-    ug=30
     !$omp parallel do private(i,j,k,ii,jj,kk,x,y,z)
     do id = 0, p%glb%threads-1
         
@@ -43,18 +37,18 @@ CHARACTER(100) :: NAME_OF_FILE
             p%of(id)%loc%marker(2)%vof%now(i,j,k) = 0.0d0
             p%of(id)%loc%solid%now(i,j,k) = 0.0d0
 
-            do ii = 1, ug
-            do jj = 1, ug
-            do kk = 1, ug
+            do ii = 1, p%glb%ibm%ug
+            do jj = 1, p%glb%ibm%ug
+            do kk = 1, p%glb%ibm%ug
                 
-                x = 0.5d0*( p%glb%x(i,j,k)+p%glb%x(i-1,j,k) ) + real(ii,8)*p%glb%dx/real(ug,8)
-                y = 0.5d0*( p%glb%y(i,j,k)+p%glb%y(i,j-1,k) ) + real(jj,8)*p%glb%dy/real(ug,8)
-                z = 0.5d0*( p%glb%z(i,j,k)+p%glb%z(i,j,k-1) ) + real(kk,8)*p%glb%dz/real(ug,8)
+                x = 0.5d0*( p%glb%x(i,j,k)+p%glb%x(i-1,j,k) ) + real(ii,8)*p%glb%dx/real(p%glb%ibm%ug,8)
+                y = 0.5d0*( p%glb%y(i,j,k)+p%glb%y(i,j-1,k) ) + real(jj,8)*p%glb%dy/real(p%glb%ibm%ug,8)
+                z = 0.5d0*( p%glb%z(i,j,k)+p%glb%z(i,j,k-1) ) + real(kk,8)*p%glb%dz/real(p%glb%ibm%ug,8)
 
                 ! dambreak -- rising gate
                 ! -----------------------------------------------
                 if( x>5.0d0/3.0d0 .and. x<5.0d0/3.0d0+2.0d0*p%glb%dx .and. z>0.0 )then
-                    p%of(id)%loc%solid%now(i,j,k) = p%of(id)%loc%solid%now(i,j,k) + 1.0d0/real(ug,8)**3.0d0
+                    p%of(id)%loc%solid%now(i,j,k) = p%of(id)%loc%solid%now(i,j,k) + 1.0d0/real(p%glb%ibm%ug,8)**3.0d0
                 endif
                 
             end do

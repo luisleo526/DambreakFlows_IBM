@@ -164,12 +164,10 @@ end subroutine
 subroutine ibm_bc
 use all
 implicit none
-integer :: id,i,j,k,ug,ii,jj,kk
+integer :: id,i,j,k,ii,jj,kk
 real(8) :: x,y,z,solid
 
 p%glb%ibm%z = p%glb%ibm%z + p%glb%ibm%w*p%glb%dt
-
-ug=30
 
 !$omp parallel do private(i,j,k,ii,jj,kk,x,y,z)
 do id = 0, p%glb%threads-1
@@ -181,16 +179,16 @@ do id = 0, p%glb%threads-1
 
         p%of(id)%loc%solid%now(i,j,k) = 0.0d0
 
-        do ii = 1, ug
-        do jj = 1, ug
-        do kk = 1, ug
+        do ii = 1, p%glb%ibm%ug
+        do jj = 1, p%glb%ibm%ug
+        do kk = 1, p%glb%ibm%ug
             
-            x = 0.5d0*( p%glb%x(i,j,k)+p%glb%x(i-1,j,k) ) + real(ii,8)*p%glb%dx/real(ug,8)
-            y = 0.5d0*( p%glb%y(i,j,k)+p%glb%y(i,j-1,k) ) + real(jj,8)*p%glb%dy/real(ug,8)
-            z = 0.5d0*( p%glb%z(i,j,k)+p%glb%z(i,j,k-1) ) + real(kk,8)*p%glb%dz/real(ug,8)
+            x = 0.5d0*( p%glb%x(i,j,k)+p%glb%x(i-1,j,k) ) + real(ii,8)*p%glb%dx/real(p%glb%ibm%ug,8)
+            y = 0.5d0*( p%glb%y(i,j,k)+p%glb%y(i,j-1,k) ) + real(jj,8)*p%glb%dy/real(p%glb%ibm%ug,8)
+            z = 0.5d0*( p%glb%z(i,j,k)+p%glb%z(i,j,k-1) ) + real(kk,8)*p%glb%dz/real(p%glb%ibm%ug,8)
 
             if( x>5.0d0/3.0d0 .and. x<5.0d0/3.0d0+2.0d0*p%glb%dx .and. z>p%glb%ibm%z )then
-                p%of(id)%loc%solid%now(i,j,k) = p%of(id)%loc%solid%now(i,j,k) + 1.0d0/real(ug,8)**3.0d0
+                p%of(id)%loc%solid%now(i,j,k) = p%of(id)%loc%solid%now(i,j,k) + 1.0d0/real(p%glb%ibm%ug,8)**3.0d0
             endif
             
         end do
