@@ -365,6 +365,8 @@ real(8) :: kh,ap
         call p%mg_setup
         write(*,*)"finish initializing multigrid exact solver"
     endif
+
+    p%glb%ibm%w = p%glb%ibm%w / p%glb%U
     
 end subroutine
 
