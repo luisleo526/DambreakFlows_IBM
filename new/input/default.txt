@@ -1,7 +1,7 @@
 ooo Method to capture interface ( LS / MPLS / CLSVOF / CDC-LS ) 
 2
 ooo Name of the problem 
-CaseA_32
+CaseD_24
 ooo Dimension of threads grid in X, Y, Z direction
 5 1 2
 ooo Nested OpenMP threads
@@ -9,9 +9,9 @@ ooo Nested OpenMP threads
 ooo Domain splits for plotting (Increase if stack-overflow)
 2
 ooo Multigrid level
-5
+4
 ooo Cells per unit length, (Domain, IBM)
-32 			10
+24 			10
 ooo Number of ghost cell
 3
 ooo Range of domain in X direction
@@ -21,9 +21,9 @@ ooo Range of domain in Y direction
 ooo Range of domain in Z direction
 0.0        2.0
 ooo Time to stop / plot / redistance
-30.0        0.5        10
+30.0       0.5        20
 ooo Crount number ( advection / redistance )
-0.01        0.5
+0.002      0.5
 ooo PPE iteration ( tolerance / w1 / w2 / valve )
 10.0    0.5     0.5     4.0
 ooo SRK6 iteration ( tolerance / w )
@@ -59,7 +59,7 @@ ooo Velocity boundary condition in Z direction ( no-slip / slip / non-reflective
 ooo Periodic ( X, Y, Z )
 0   0   0
 ooo     Parameters (v0)
-0.408
+1.194
 
 0.408
 0.696
