@@ -120,7 +120,7 @@ do loc_id = 1, p%fil%num_of_sensors
 
 enddo
 
-write(p%fil%dambreak, '(7ES15.4)')p%glb%time*p%glb%T, xloc(:)
+write(p%fil%dambreak2, '(7ES15.4)')p%glb%time*p%glb%T, xloc(:)
 
 end subroutine 
 

@@ -50,6 +50,10 @@ CHARACTER(100) :: NAME_OF_FILE
                 if( x>5.0d0/3.0d0 .and. x<5.0d0/3.0d0+2.0d0*p%glb%dx .and. z>0.0 )then
                     p%of(id)%loc%solid%now(i,j,k) = p%of(id)%loc%solid%now(i,j,k) + 1.0d0/real(p%glb%ibm%ug,8)**3.0d0
                 endif
+
+                if ( x<=5.0d0/3.0d0 .and. z<=1.0d0 )then
+                    p%of(id)%loc%vof%now(i,j,k) = p%of(id)%loc%vof%now(i,j,k) + 1.0d0/real(p%glb%ibm%ug,8)**3.0d0
+                endif
                 
             end do
             end do
