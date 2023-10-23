@@ -34,4 +34,4 @@
 
 }                
 
-camera{top_view}
+camera{side_view}
