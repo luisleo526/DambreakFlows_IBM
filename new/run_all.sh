@@ -3,13 +3,13 @@
 case=$1
 
 if [ $case = "A" ];then
-	u = "0.408"
+	sed -i -e "62 c 0.408" input/default.txt
 elif [ $case = "B" ];then
-	u = "0.696"
+	sed -i -e "62 c 0.696" input/default.txt
 elif [ $case = "C" ];then
-	u = "0.952"
+	sed -i -e "62 c 0.952" input/default.txt
 elif [ $case = "D" ];then
-	u = "1.194"
+	sed -i -e "62 c 1.194" input/default.txt
 fi
 
 declare -a params=(
