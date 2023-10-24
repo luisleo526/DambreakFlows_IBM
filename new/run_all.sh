@@ -38,7 +38,7 @@ do
         sed -i -e "4 c ${name}" input/default.txt
         sed -i -e "12 c ${paramInfo[1]}" input/default.txt
         sed -i -e "14 c ${paramInfo[0]} 10" input/default.txt
-        sed -i -e "26 c ${mathodInfo[2]} 0.5" input/default.txt
+        sed -i -e "26 c ${methodInfo[2]} 0.5" input/default.txt
 
         nohup bash -c "time ./RUN" &> logs/$case/$name&
         sleep 3
