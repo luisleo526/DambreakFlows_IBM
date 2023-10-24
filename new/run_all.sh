@@ -39,7 +39,7 @@ do
         sed -i -e "14 c ${paramInfo[0]} 10" input/default.txt
         sed -i -e "26 c ${paramInfo[2]} 0.5" input/default.txt
 
-        nohup ./RUN &> logs/$case/$name&
+        nohup bash -c "time ./RUN" &> logs/$case/$name&
         sleep 3
 
     done     
