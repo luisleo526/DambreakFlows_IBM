@@ -19,8 +19,8 @@ declare -a params=(
 )
 
 declare -a methods=(
-    "2 MPLS"
-    "3 CLSVOF"
+    "2 MPLS 0.01"
+    "3 CLSVOF 0.005"
 )
 
 rm -rf logs/$case
@@ -38,7 +38,7 @@ do
         sed -i -e "4 c ${name}" input/default.txt
         sed -i -e "12 c ${paramInfo[1]}" input/default.txt
         sed -i -e "14 c ${paramInfo[0]} 10" input/default.txt
-        sed -i -e "26 c ${paramInfo[2]} 0.5" input/default.txt
+        sed -i -e "26 c ${mathodInfo[2]} 0.5" input/default.txt
 
         nohup bash -c "time ./RUN" &> logs/$case/$name&
         sleep 3
