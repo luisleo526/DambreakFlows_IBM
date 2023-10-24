@@ -34,6 +34,7 @@ do
         read -a methodInfo <<< "$methodArgs"
         name="Case${case}_${methodInfo[1]}_${paramInfo[0]}"
 
+        sed -i -e "2 c ${methodInfo[0]}" input/default.txt
         sed -i -e "4 c ${name}" input/default.txt
         sed -i -e "12 c ${paramInfo[1]}" input/default.txt
         sed -i -e "14 c ${paramInfo[0]} 10" input/default.txt
