@@ -5,12 +5,12 @@ implicit none
 integer :: i,j,k,id,iter
 real(8) :: lam, plam
 
-do iter = 1, 20
+do iter = 1, 5
     
     if( p%glb%method == 4)then
         call curv
     else
-        call surface_norms
+        call surface_norms_sec
     endif
 
     call ls_mv
