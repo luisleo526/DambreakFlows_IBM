@@ -1,7 +1,3 @@
-  
-
-
-
 #declare top_view = camera {
 
 	perspective
