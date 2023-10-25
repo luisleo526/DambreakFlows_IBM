@@ -170,7 +170,7 @@ if( .not. p%glb%merged )then
 
         if(mod(p%glb%iter,p%glb%t2red).eq.0)then
             call clsvof_recon
-        else if mod(p%glb%iter,int(p%glb%t2red/2)).eq.0)then
+        else if(mod(p%glb%iter,int(p%glb%t2red/2)).eq.0)then
             call level_set_rk3_redis(1)
         endif
 
