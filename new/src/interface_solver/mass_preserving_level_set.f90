@@ -10,7 +10,7 @@ do iter = 1, 5
     if( p%glb%method == 4)then
         call curv
     else
-        call surface_norms_sec
+        call surface_norms
     endif
 
     call ls_mv
