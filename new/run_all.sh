@@ -1,5 +1,6 @@
 #!/bin/bash
 
+FILE="input/default.txt"
 case=$1
 
 if [ $case = "A" ];then
@@ -12,36 +13,37 @@ elif [ $case = "D" ];then
 	sed -i -e "62 c 1.194" input/default.txt
 fi
 
-declare -a params=(
-    "16 4 0.01"
-    "24 4 0.01"
-    "32 5 0.01"
+declare -a grids=(
+    "16 4"
+    "24 4"
+    "32 5"
 )
 
 declare -a methods=(
-    "2 MPLS 0.01"
-    "3 CLSVOF 0.005"
+    "2   MPLS  0.01 15"
+    "3 CLSVOF 0.005 20"
 )
 
 rm -rf logs/$case
 mkdir -p logs/$case
 
-for paramArgs in "${params[@]}"; 
+for grid in "${grids[@]}"; 
 do
-    read -a paramInfo <<< "$paramArgs" 
-    for methodArgs in "${methods[@]}";
+    read -a gridArgs <<< "$grid" 
+    for method in "${methods[@]}";
     do
-        read -a methodInfo <<< "$methodArgs"
-        name="Case${case}_${methodInfo[1]}_${paramInfo[0]}"
+        read -a methodArgs <<< "$method"
+        name="Case${case}_${methodArgs[1]}_${gridArgs[0]}"
 
-        sed -i -e "2 c ${methodInfo[0]}" input/default.txt
-        sed -i -e "4 c ${name}" input/default.txt
-        sed -i -e "12 c ${paramInfo[1]}" input/default.txt
-        sed -i -e "14 c ${paramInfo[0]} 10" input/default.txt
-        sed -i -e "26 c ${methodInfo[2]} 0.25" input/default.txt
+        sed -i -e "2 c ${methodArgs[0]}" $FILE
+        sed -i -e "4 c ${name}" $FILE
+        sed -i -e "12 c ${gridArgs[1]}" $FILE
+        sed -i -e "14 c ${gridArgs[0]} 10" $FILE
+        sed -i -e "24 c 30.0 0.5 ${methodArgs[3]}" $FILE
+        sed -i -e "26 c ${methodArgs[2]} 0.25" $FILE
 
         nohup bash -c "time ./RUN" &> logs/$case/$name&
-        sleep 3
+        sleep 2
 
     done     
 done
