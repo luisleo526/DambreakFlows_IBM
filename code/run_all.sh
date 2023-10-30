@@ -20,7 +20,7 @@ declare -a grids=(
 )
 
 declare -a methods=(
-    "2   MPLS  0.01 15"
+    "2   MPLS 0.005 15"
     "3 CLSVOF 0.005 20"
 )
 
@@ -40,7 +40,7 @@ do
         sed -i -e "12 c ${gridArgs[1]}" $FILE
         sed -i -e "14 c ${gridArgs[0]} 10" $FILE
         sed -i -e "24 c 30.0 0.5 ${methodArgs[3]}" $FILE
-        sed -i -e "26 c ${methodArgs[2]} 0.25" $FILE
+        sed -i -e "26 c ${methodArgs[2]} 0.1" $FILE
 
         nohup bash -c "time ./RUN" &> logs/$case/$name&
         sleep 2
