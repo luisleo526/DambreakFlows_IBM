@@ -61,9 +61,9 @@ do id = 0, p%glb%threads-1
         do i = p%of(id)%loc%is, p%of(id)%loc%ie
 
             if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i+1,j,k) < 0.0d0 )then
-                if( p%of(id)%loc%phi%now(i-1,j,k) > 0.0d0 .and. p%of(id)%loc%phi%now(i-2,j,k) >0.0d0 )then
+                if( p%of(id)%loc%phi%now(i-1,j,k) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k) > 0.0d0 )then
                     r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i+1,j,k)))
-                    damfront = max(damfront, p%glb%x(i,j,k) + p%glb%dx) * r
+                    damfront = max(damfront, p%glb%x(i,j,k) + p%glb%dx * r)
                 endif
             endif
 
