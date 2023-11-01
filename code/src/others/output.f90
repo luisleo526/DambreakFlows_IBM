@@ -61,7 +61,7 @@ do id = 0, p%glb%threads-1
         do i = p%of(id)%loc%is, p%of(id)%loc%ie
 
             if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i+1,j,k) < 0.0d0 )then
-                if( p%of(id)%loc%phi%now(i-1,j,k) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k) > 0.0d0 )then
+                if( p%of(id)%loc%phi%now(i-1,j,k) > 0.0d0 .and. p%of(id)%loc%phi%now(i-2,j,k) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k) > 0.0d0 )then
                     r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i+1,j,k)))
                     damfront = max(damfront, p%glb%x(i,j,k) + p%glb%dx * r)
                 endif
@@ -79,7 +79,7 @@ do id = 0, p%glb%threads-1
         do k = p%of(id)%loc%ks, p%of(id)%loc%ke
         do j = p%of(id)%loc%js, p%of(id)%loc%je
             if( p%of(id)%loc%phi%now(i,j,k) * p%of(id)%loc%phi%now(i,j,k+1) < 0.0d0 )then
-                if( p%of(id)%loc%phi%now(i,j,k-1) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k-2) >0.0d0 )then
+                if( p%of(id)%loc%phi%now(i,j,k-1) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k-2) > 0.0d0 .and. p%of(id)%loc%phi%now(i,j,k) > 0.0d0 )then
                     r = abs(p%of(id)%loc%phi%now(i,j,k)) / (abs(p%of(id)%loc%phi%now(i,j,k))+abs(p%of(id)%loc%phi%now(i,j,k+1)))
                     damh = max( damh, p%glb%z(i,j,k) + p%glb%dz * r)
                 endif
